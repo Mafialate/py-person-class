@@ -4,22 +4,21 @@ class Person:
     def __init__(self, name: str, age: int) -> None:
         self.name = name
         self.age = age
+        Person.people[name] = self
 
 
 def create_person_list(people: list) -> list:
-    Person.people = {
-        person["name"]: Person(person["name"], person["age"])
-        for person in people
-    }
+    result = [Person(person["name"], person["age"]) for person in people]
+    Person.people = {person.name: person for person in result}
 
     for person in people:
-        if "wife" in person and person["wife"]:
+        if person.get("wife"):
             setattr(
                 Person.people[person["name"]],
                 "wife",
                 Person.people[person["wife"]]
             )
-        if "husband" in person and person["husband"]:
+        if person.get("husband"):
             setattr(
                 Person.people[person["name"]],
                 "husband",
